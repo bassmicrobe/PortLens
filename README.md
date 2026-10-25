@@ -22,6 +22,18 @@ open dist/PortLens.app
 
 機器を接続せずに画面を試す場合は、`swift run PortLens --demo`でデモを起動できます。
 
+## スクリーンショット
+
+デモデータを使って撮影したアプリの実画面です。実際の機器接続状況を表すものではありません。
+
+**接続図** — USBバスとハブの下流を展開し、選択した機器までの接続経路を強調表示しています。
+
+![PortLensのUSB接続図。ハブにつながる機器と選択した機器までの経路を表示](docs/images/connection-map.jpg)
+
+**機器一覧と詳細** — USB・Thunderbolt／USB4機器をまとめて表示し、選択した機器のメーカー・速度・接続経路を確認できます。
+
+![PortLensの機器一覧とThunderbolt Dockの詳細パネル](docs/images/device-list.jpg)
+
 ## できること
 
 - USB・Thunderbolt／USB4の接続図と機器一覧を切り替える
