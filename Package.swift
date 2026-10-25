@@ -11,7 +11,8 @@ let package = Package(
     ],
     targets: [
         .target(name: "PortLensCore"),
-        .executableTarget(name: "PortLens", dependencies: ["PortLensCore"]),
+        .executableTarget(name: "PortLens", dependencies: ["PortLensCore"],
+                          resources: [.process("Resources")]),
         .target(
             name: "PortLensValidation",
             dependencies: ["PortLensCore"],

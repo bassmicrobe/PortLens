@@ -4,6 +4,7 @@ import PortLensCore
 
 struct ContentView: View {
     @ObservedObject var model: AppModel
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         NavigationSplitView {
@@ -51,17 +52,21 @@ struct ContentView: View {
 
     private var sidebar: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 10) {
-                Image(systemName: "cable.connector")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(.teal)
-                VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 6) {
+                if let logo = colorScheme == .dark ? BrandResources.darkLogo : BrandResources.lightLogo {
+                    Image(nsImage: logo)
+                        .renderingMode(.original)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 172, height: 32)
+                        .accessibilityLabel("PortLens")
+                } else {
                     Text("PortLens").font(.system(size: 20, weight: .semibold, design: .rounded))
-                    Text("Macのつながりを、ひと目で。")
-                        .font(.system(size: 10)).foregroundStyle(.secondary)
                 }
-                Spacer(minLength: 0)
+                Text("Macのつながりを、ひと目で。")
+                    .font(.system(size: 10)).foregroundStyle(.secondary)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(18)
             List(selection: $model.selection) {
                 Section("表示する接続") {

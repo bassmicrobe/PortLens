@@ -32,6 +32,7 @@ trap 'rm -rf "$bundle_staging"' EXIT
 cp "$executable_directory/PortLens" "$bundle_staging/Contents/MacOS/PortLens"
 cp "$package_root/Resources/Info.plist" "$bundle_staging/Contents/Info.plist"
 cp "$package_root/Resources/AppIcon.icns" "$bundle_staging/Contents/Resources/AppIcon.icns"
+cp -R "$executable_directory/PortLens_PortLens.bundle" "$bundle_staging/Contents/Resources/"
 chmod 755 "$bundle_staging/Contents/MacOS/PortLens"
 plutil -lint "$bundle_staging/Contents/Info.plist"
 

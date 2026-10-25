@@ -1,5 +1,10 @@
 # PortLens
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="Resources/Brand/portlens-lockup-dark.svg">
+  <img src="Resources/Brand/portlens-lockup-light.svg" alt="PortLens" width="360">
+</picture>
+
 **Macのつながりを、ひと目で。**
 
 PortLensは、Macに接続されたUSB・Thunderbolt／USB4機器を、接続図と一覧で確認するmacOSアプリです。macOSが認識している機器情報を読み取り、どのハブやバスにつながっているかを表示します。
@@ -153,6 +158,7 @@ swift test
 ```text
 Sources/
   PortLens/             SwiftUIアプリ、画面と状態管理
+    Resources/          明暗それぞれの背景用ロゴ（PDF）
   PortLensCore/         接続情報の取得・解析・モデル
   PortLensChecks/       Command Line Toolsでも実行できる検証ランナー
 Tests/
@@ -161,13 +167,16 @@ Tests/
 Resources/
   Info.plist           アプリバンドル情報
   AppIcon.icns         アプリアイコン
+  Brand/               提供されたオリジナルのSVGロゴ一式
 scripts/
   build-app.sh         .appの生成
-  generate-icon.swift  AppKitによるアイコンの生成
+  generate-icon.swift  SVGからアイコン・画面用ロゴを生成
 ```
 
 パーサーのテストは合成データで実行するため、特定のUSB機器を接続しておく必要はありません。実機との接続確認には`--snapshot`、画面の確認には通常起動または`--demo`を使います。
 
 接続図の空白クリックは、実画面の100%表示で確認済みです（2026年10月25日）。USBバスのカードを選択した後、空白をクリックすると選択枠と接続経路の強調が解除され、詳細パネルが閉じて接続図の表示幅が戻ることを確認しました。上記の共通検証とXCTestは接続情報・図の配置・ズーム計算を対象とし、GUIのクリック操作を検証するものではありません。
 
-アイコンはリポジトリに含まれています。図形のデザインを変更して再生成する場合は、`swift scripts/generate-icon.swift`を実行します。
+ロゴのSVG原本は`Resources/Brand/`に保存しています。READMEとアプリのサイドバーは、明暗それぞれの背景に合わせたロゴを使います。`portlens-appicon.svg`から生成したアイコンをDock・Finderで使用します。
+
+SVGを更新した場合は、`swift scripts/generate-icon.swift`でアプリアイコンと画面用PDFを再生成し、`./scripts/build-app.sh`でアプリをビルドし直してください。生成済みのファイルもリポジトリに含まれるため、通常のビルドで再生成する必要はありません。
