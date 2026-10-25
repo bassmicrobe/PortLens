@@ -1,0 +1,22 @@
+name: macOS build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: swift --version
+      - name: Portable validation
+        run: swift run PortLensChecks
+      - name: XCTest
+        run: swift test
+      - name: Build app
+        run: ./scripts/build-app.sh

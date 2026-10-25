@@ -1,0 +1,11 @@
+.DS_Store
+.build/
+.swiftpm/
+dist/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# Local diagnostic captures may contain device identifiers.
+snapshots/
+*.snapshot.json
