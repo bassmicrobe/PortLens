@@ -9,7 +9,17 @@
 
 PortLensは、Macに接続されたUSB・Thunderbolt／USB4機器を、接続図と一覧で確認するmacOSアプリです。macOSが認識している機器情報を読み取り、どのハブやバスにつながっているかを表示します。
 
-## すぐに試す
+## ダウンロード
+
+**[PortLens 0.1.0をダウンロード（macOS 14以降・Universal版）](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-universal.zip)**
+
+AppleシリコンとIntel Macの両方に対応しています。ZIPを展開し、`PortLens.app`をApplicationsフォルダにコピーして起動してください。XcodeやCommand Line Toolsのインストールは不要です。
+
+[リリースノート](https://github.com/bassmicrobe/PortLens/releases/tag/v0.1.0) · [SHA-256チェックサム](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-SHA256SUMS.txt)
+
+配布版はアドホック署名付きで、Developer ID署名とAppleの公証はまだ行っていません。初回起動時にmacOSが開発元を確認できない旨を表示する場合があります。入手元とチェックサムを確認し、必要に応じて[Appleの公式案内](https://support.apple.com/ja-jp/102445)を参照してください。
+
+## ソースからビルドして試す
 
 macOS 14以降と、Swift 5.9以降を含むXcodeまたはCommand Line Toolsが必要です。
 
@@ -89,7 +99,7 @@ xcode-select --install
 open dist/PortLens.app
 ```
 
-`dist/PortLens.app`に、ビルドしたMacと同じCPUアーキテクチャのアプリが生成されます。普段使う場合はFinderでApplicationsフォルダなどにコピーできます。
+`dist/PortLens.app`に、ビルドしたMacと同じCPUアーキテクチャのアプリが生成されます。AppleシリコンとIntel Macの両方に対応する場合は`./scripts/build-app.sh --universal`を使います。普段使う場合はFinderでApplicationsフォルダなどにコピーできます。
 
 スクリプトはローカル実行用のアドホック署名を付けます。Developer ID署名・Appleの公証・Mac App Store向けのサンドボックス設定は含みません。他のMacへ配布する場合は、配布方法に合わせた署名と権限の検証が必要です。
 
@@ -103,6 +113,12 @@ swift run PortLens
 
 ```sh
 ./scripts/build-app.sh --debug
+```
+
+配布用のUniversal版ZIPとSHA-256チェックサムを作る場合は、次を実行します。出力先は`dist/releases/`です。
+
+```sh
+./scripts/package-release.sh
 ```
 
 ## デモ・コマンドライン
@@ -182,6 +198,7 @@ Resources/
   Brand/               提供されたオリジナルのSVGロゴ一式
 scripts/
   build-app.sh         .appの生成
+  package-release.sh   Universal版ZIPとチェックサムの生成
   generate-icon.swift  SVGからアイコン・画面用ロゴを生成
 ```
 
