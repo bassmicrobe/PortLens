@@ -7,44 +7,9 @@
 
 **Macのつながりを、ひと目で。**
 
+## 概要
+
 PortLensは、Macに接続されたUSB・Thunderbolt／USB4機器を、接続図と一覧で確認するmacOSアプリです。macOSが認識している機器情報を読み取り、どのハブやバスにつながっているかを表示します。
-
-## ダウンロード
-
-**[PortLens 0.1.0をダウンロード（macOS 14以降・Universal版）](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-universal.zip)**
-
-AppleシリコンとIntel Macの両方に対応しています。ZIPを展開し、`PortLens.app`をApplicationsフォルダにコピーして起動してください。XcodeやCommand Line Toolsのインストールは不要です。
-
-[リリースノート](https://github.com/bassmicrobe/PortLens/releases/tag/v0.1.0) · [SHA-256チェックサム](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-SHA256SUMS.txt)
-
-配布版はアドホック署名付きで、Developer ID署名とAppleの公証はまだ行っていません。初回起動時にmacOSが開発元を確認できない旨を表示する場合があります。入手元とチェックサムを確認し、必要に応じて[Appleの公式案内](https://support.apple.com/ja-jp/102445)を参照してください。
-
-## ソースからビルドして試す
-
-macOS 14以降と、Swift 5.9以降を含むXcodeまたはCommand Line Toolsが必要です。
-
-```sh
-git clone https://github.com/bassmicrobe/PortLens.git
-cd PortLens
-./scripts/build-app.sh
-open dist/PortLens.app
-```
-
-機器を接続せずに画面を試す場合は、`swift run PortLens --demo`でデモを起動できます。
-
-## スクリーンショット
-
-デモデータを使って撮影したアプリの実画面です。実際の機器接続状況を表すものではありません。
-
-**接続図** — USBバスとハブの下流を展開し、選択した機器までの接続経路を強調表示しています。
-
-![PortLensのUSB接続図。ハブにつながる機器と選択した機器までの経路を表示](docs/images/connection-map.jpg)
-
-**機器一覧と詳細** — USB・Thunderbolt／USB4機器をまとめて表示し、選択した機器のメーカー・速度・接続経路を確認できます。
-
-![PortLensの機器一覧とThunderbolt Dockの詳細パネル](docs/images/device-list.jpg)
-
-## できること
 
 - USB・Thunderbolt／USB4の接続図と機器一覧を切り替える
 - 接続図を拡大・縮小し、ハブやバスの下流を折りたたむ
@@ -62,7 +27,99 @@ open dist/PortLens.app
 
 表示は最後に取得した時点のスナップショットです。自動更新は初期状態ではオフです。「10秒ごとに更新」をオンにすると、10秒待ってから情報を再取得し、この処理を繰り返します。取得中の処理は重複実行しません。抜き差しした直後は更新するか、次の自動更新を待ってください。
 
-## 画面の使い方
+外部Swiftパッケージ、Webサーバー、アカウント登録は不要です。データの取得・表示・書き出しはMac内で完結します。詳細は[安全性とプライバシー](docs/安全性とプライバシー.md)を参照してください。図はOSが報告する論理的な接続関係であり、物理ポート位置の推測やUSBとThunderboltの自動統合はありません。詳細は[表示の制限](docs/表示の制限.md)を参照してください。
+
+デモデータを使って撮影したアプリの実画面です。実際の機器接続状況を表すものではありません。
+
+**接続図** — USBバスとハブの下流を展開し、選択した機器までの接続経路を強調表示しています。
+
+![PortLensのUSB接続図。ハブにつながる機器と選択した機器までの経路を表示](docs/images/connection-map.jpg)
+
+**機器一覧と詳細** — USB・Thunderbolt／USB4機器をまとめて表示し、選択した機器のメーカー・速度・接続経路を確認できます。
+
+![PortLensの機器一覧とThunderbolt Dockの詳細パネル](docs/images/device-list.jpg)
+
+## 技術スタック
+
+- 言語: Swift 5.9以降
+- UI: SwiftUI / AppKit
+- ビルド: Swift Package Manager（外部Swiftパッケージなし）
+- 対象OS: macOS 14 Sonoma以降
+- 接続情報: macOS標準の`system_profiler`（固定引数）
+- 検証: `PortLensChecks`（Command Line Tools可） / XCTest（フル版Xcode）
+- CI: GitHub Actions（macos-14）
+
+## セットアップ
+
+### 動作環境
+
+- macOS 14 Sonoma以降
+- ビルドにはSwift 5.9以降を含むXcode、またはCommand Line Tools for Xcode
+- `swift test`でのXCTest実行にはフル版Xcodeが必要。Command Line Toolsのみの環境でもアプリのビルドと共通検証コマンドを利用可能
+
+Command Line Toolsが未導入なら、ターミナルで次を実行してAppleのインストール画面を進めます。
+
+```sh
+xcode-select --install
+```
+
+### ダウンロード
+
+**[PortLens 0.1.0をダウンロード（macOS 14以降・Universal版）](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-universal.zip)**
+
+AppleシリコンとIntel Macの両方に対応しています。ZIPを展開し、`PortLens.app`をApplicationsフォルダにコピーして起動してください。XcodeやCommand Line Toolsのインストールは不要です。
+
+[リリースノート](https://github.com/bassmicrobe/PortLens/releases/tag/v0.1.0) · [SHA-256チェックサム](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-SHA256SUMS.txt)
+
+配布版はアドホック署名付きで、Developer ID署名とAppleの公証はまだ行っていません。初回起動時にmacOSが開発元を確認できない旨を表示する場合があります。入手元とチェックサムを確認し、必要に応じて[Appleの公式案内](https://support.apple.com/ja-jp/102445)を参照してください。
+
+### ソースからビルド
+
+```sh
+git clone https://github.com/bassmicrobe/PortLens.git
+cd PortLens
+./scripts/build-app.sh
+open dist/PortLens.app
+```
+
+`dist/PortLens.app`に、ビルドしたMacと同じCPUアーキテクチャのアプリが生成されます。AppleシリコンとIntel Macの両方に対応する場合は`./scripts/build-app.sh --universal`を使います。デバッグ構成は`./scripts/build-app.sh --debug`です。普段使う場合はFinderでApplicationsフォルダなどにコピーできます。
+
+スクリプトはローカル実行用のアドホック署名を付けます。Developer ID署名・Appleの公証・Mac App Store向けのサンドボックス設定は含みません。他のMacへ配布する場合は、配布方法に合わせた署名と権限の検証が必要です。
+
+開発中は次の方法でも起動できます。
+
+```sh
+swift run PortLens
+```
+
+配布用のUniversal版ZIPとSHA-256チェックサムを作る場合は、次を実行します。出力先は`dist/releases/`です。
+
+```sh
+./scripts/package-release.sh
+```
+
+### 検証
+
+Command Line Toolsのみの環境では、XCTestに依存しない共通検証コマンドを使います。
+
+```sh
+swift run PortLensChecks
+swift build --product PortLens
+```
+
+フル版Xcodeを開発環境として選択している場合は、同じ検証処理をXCTestから実行できます。
+
+```sh
+swift test
+```
+
+`no such module 'XCTest'`と表示される場合は、`xcode-select -p`で選択中の開発環境を確認してください。Command Line Toolsのみの場合は`swift run PortLensChecks`を使うか、フル版Xcodeを導入・選択します。CIでは共通検証コマンドとXCTestの両方を実行します。
+
+パーサーのテストは合成データで実行するため、特定のUSB機器を接続しておく必要はありません。実機との接続確認には`--snapshot`、画面の確認には通常起動または`--demo`を使います。
+
+SVGを更新した場合は、`swift scripts/generate-icon.swift`でアプリアイコンと画面用PDFを再生成し、`./scripts/build-app.sh`でアプリをビルドし直してください。生成済みのファイルもリポジトリに含まれるため、通常のビルドで再生成する必要はありません。ロゴのSVG原本は`Resources/Brand/`に保存しています。READMEとアプリのサイドバーは、明暗それぞれの背景に合わせたロゴを使います。`portlens-appicon.svg`から生成したアイコンをDock・Finderで使用します。
+
+## 使い方
 
 1. 左のサイドバーで「すべての接続」「USB」「Thunderbolt / USB4」、または個別のバスを選びます。
 2. 「接続図」「一覧」を切り替えます。機器が多い環境では、初めはバスが折りたたまれます。「展開」、またはカードの展開ボタンから下流を確認できます。
@@ -76,52 +133,6 @@ open dist/PortLens.app
 | 接続情報を更新 | `⌘R` |
 | JSONを書き出す | `⇧⌘S` |
 | 選択中の機器の詳細パネルを切り替える | `⌥⌘I` |
-
-## 動作環境
-
-- macOS 14 Sonoma以降
-- ビルドにはSwift 5.9以降を含むXcode、またはCommand Line Tools for Xcode
-- `swift test`でのXCTest実行にはフル版Xcodeが必要。Command Line Toolsのみの環境でもアプリのビルドと共通検証コマンドを利用可能
-- 外部Swiftパッケージ、Webサーバー、アカウント登録は不要
-
-Command Line Toolsが未導入なら、ターミナルで次を実行してAppleのインストール画面を進めます。
-
-```sh
-xcode-select --install
-```
-
-## ビルドして起動
-
-リポジトリのルートで実行します。
-
-```sh
-./scripts/build-app.sh
-open dist/PortLens.app
-```
-
-`dist/PortLens.app`に、ビルドしたMacと同じCPUアーキテクチャのアプリが生成されます。AppleシリコンとIntel Macの両方に対応する場合は`./scripts/build-app.sh --universal`を使います。普段使う場合はFinderでApplicationsフォルダなどにコピーできます。
-
-スクリプトはローカル実行用のアドホック署名を付けます。Developer ID署名・Appleの公証・Mac App Store向けのサンドボックス設定は含みません。他のMacへ配布する場合は、配布方法に合わせた署名と権限の検証が必要です。
-
-開発中は次の方法でも起動できます。
-
-```sh
-swift run PortLens
-```
-
-デバッグ構成のアプリバンドルを作る場合は次を使います。
-
-```sh
-./scripts/build-app.sh --debug
-```
-
-配布用のUniversal版ZIPとSHA-256チェックサムを作る場合は、次を実行します。出力先は`dist/releases/`です。
-
-```sh
-./scripts/package-release.sh
-```
-
-## デモ・コマンドライン
 
 デモ表示は実際の接続状態を表しません。
 
@@ -144,44 +155,7 @@ mkdir -p snapshots
 swift run PortLens --snapshot > snapshots/mac.snapshot.json
 ```
 
-## 安全性とプライバシー
-
-接続情報の取得には、macOS標準の`system_profiler`を固定の引数で実行します。シェル経由の任意コマンド実行、管理者権限への昇格、機器への制御命令、ドライバーの追加は行いません。データの取得・表示・書き出しはMac内で完結し、外部へのアップロードや解析サービスへの送信はありません。
-
-表示・JSON書き出しの対象は、機器名、メーカー、接続方式、速度、論理的な位置などに絞っています。機器シリアル番号、Thunderbolt UUID、MACアドレスは保存対象に含めません。ただし、機器名だけでも利用環境を推測できるため、書き出したファイルを共有する前に内容を確認してください。
-
-自分で付けた表示名は、このMacのアプリ設定（`UserDefaults`）に保存します。JSONには含まれず、OSが報告した名前が書き出されます。接続経路のコピーには画面上の表示名が使われます。
-
-通常の取得はログイン中のユーザー権限で実行します。OSや組織の管理設定によって情報の一部が取得できない場合は、アプリ内のエラー・警告を確認してください。
-
-## 表示の読み方と制限
-
-- **図はOSが認識する論理的な接続関係です。** 一つのドックが複数のUSBハブを内蔵している場合、図にも複数のハブが現れます。ハブの表示数は実物の箱の台数と一致しません。
-- **USBとThunderboltは別のツリーとして表示します。** 現在のバージョンは、USBコントローラーと上流のThunderboltドックを照合して、一つの物理配線図に自動統合する機能を持ちません。同じドックがThunderbolt機器として現れ、そのUSB機能がUSB側にも現れることがあります。件数を合計して物理機器の台数と解釈しないでください。
-- 接続図の「このMac」はUSBとThunderboltのまとまりごとに表示します。同じMacを接続方式別に示しており、複数台のMacを検出しているわけではありません。機器選択時は経路に含まれる線だけを強調し、その他の線を薄く表示します。
-- **USBのバス・位置IDは、本体の左右のポート番号ではありません。** macOSから分からない物理位置を推測で表示しません。
-- **接続速度はOSが報告した値です。** 実測の転送速度、現在の帯域使用量、ハブ全体の電力余裕を示すものではありません。
-- **一覧にないことだけでは故障と断定できません。** 電源、ケーブル、ハブ、OSの認識状態などを別に確認する必要があります。
-- **USB認識とアプリ側の動作は別です。** 例えばSSL UF8がUSB一覧にあっても、SSL 360やDAWとの連携が正常であることまでは確認しません。
-- 接続先を変えると位置IDや機器IDが変わることがあります。同じ物理機器が別のノードとして表示され、保存した表示名が引き継がれない場合があります。
-- 更新に失敗した場合は警告とともに前回の情報を表示します。画面下部の取得時刻を確認してください。過去のスナップショットを読み込む機能はありません。
-
-## 開発
-
-Command Line Toolsのみの環境では、XCTestに依存しない共通検証コマンドを使います。
-
-```sh
-swift run PortLensChecks
-swift build --product PortLens
-```
-
-フル版Xcodeを開発環境として選択している場合は、同じ検証処理をXCTestから実行できます。
-
-```sh
-swift test
-```
-
-`no such module 'XCTest'`と表示される場合は、`xcode-select -p`で選択中の開発環境を確認してください。Command Line Toolsのみの場合は`swift run PortLensChecks`を使うか、フル版Xcodeを導入・選択します。CIでは共通検証コマンドとXCTestの両方を実行します。
+## 構成
 
 ```text
 Sources/
@@ -193,19 +167,20 @@ Tests/
   PortLensValidation/   接続ツリー、入力検証、プライバシーなどの共通検証
   PortLensCoreTests/    共通検証のXCTestラッパー
 Resources/
-  Info.plist           アプリバンドル情報
-  AppIcon.icns         アプリアイコン
-  Brand/               提供されたオリジナルのSVGロゴ一式
+  Info.plist            アプリバンドル情報
+  AppIcon.icns          アプリアイコン
+  Brand/                提供されたオリジナルのSVGロゴ一式
 scripts/
-  build-app.sh         .appの生成
-  package-release.sh   Universal版ZIPとチェックサムの生成
-  generate-icon.swift  SVGからアイコン・画面用ロゴを生成
+  build-app.sh          .appの生成
+  package-release.sh    Universal版ZIPとチェックサムの生成
+  generate-icon.swift   SVGからアイコン・画面用ロゴを生成
+docs/
+  images/               スクリーンショット
+  releases/             リリースノート
 ```
 
-パーサーのテストは合成データで実行するため、特定のUSB機器を接続しておく必要はありません。実機との接続確認には`--snapshot`、画面の確認には通常起動または`--demo`を使います。
+## ドキュメント
 
-接続図の空白クリックは、実画面の100%表示で確認済みです（2026年10月25日）。USBバスのカードを選択した後、空白をクリックすると選択枠と接続経路の強調が解除され、詳細パネルが閉じて接続図の表示幅が戻ることを確認しました。上記の共通検証とXCTestは接続情報・図の配置・ズーム計算を対象とし、GUIのクリック操作を検証するものではありません。
-
-ロゴのSVG原本は`Resources/Brand/`に保存しています。READMEとアプリのサイドバーは、明暗それぞれの背景に合わせたロゴを使います。`portlens-appicon.svg`から生成したアイコンをDock・Finderで使用します。
-
-SVGを更新した場合は、`swift scripts/generate-icon.swift`でアプリアイコンと画面用PDFを再生成し、`./scripts/build-app.sh`でアプリをビルドし直してください。生成済みのファイルもリポジトリに含まれるため、通常のビルドで再生成する必要はありません。
+- [v0.1.0 リリースノート](docs/releases/v0.1.0.md)
+- [安全性とプライバシー](docs/安全性とプライバシー.md)
+- [表示の制限](docs/表示の制限.md)
