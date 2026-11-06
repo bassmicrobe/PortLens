@@ -65,13 +65,13 @@ xcode-select --install
 
 ### ダウンロード
 
-**[PortLens 0.1.0をダウンロード（macOS 14以降・Universal版）](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-universal.zip)**
+**[PortLens 0.1.0をダウンロード（Apple公証済み・Universal版）](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0-notarized/PortLens-0.1.0-universal-notarized.zip)**
 
 AppleシリコンとIntel Macの両方に対応しています。ZIPを展開し、`PortLens.app`をApplicationsフォルダにコピーして起動してください。XcodeやCommand Line Toolsのインストールは不要です。
 
-[リリースノート](https://github.com/bassmicrobe/PortLens/releases/tag/v0.1.0) · [SHA-256チェックサム](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0/PortLens-0.1.0-SHA256SUMS.txt)
+[リリースノート](https://github.com/bassmicrobe/PortLens/releases/tag/v0.1.0-notarized) · [SHA-256チェックサム](https://github.com/bassmicrobe/PortLens/releases/download/v0.1.0-notarized/PortLens-0.1.0-notarized-SHA256SUMS.txt)
 
-配布版はアドホック署名付きで、Developer ID署名とAppleの公証はまだ行っていません。初回起動時にmacOSが開発元を確認できない旨を表示する場合があります。入手元とチェックサムを確認し、必要に応じて[Appleの公式案内](https://support.apple.com/ja-jp/102445)を参照してください。
+配布版は0.1.0（ビルド2）で、Cybereye Technology Co., Ltd.のDeveloper ID署名とApple公証済みです。公証チケットをアプリに添付し、配布ZIPを展開した後の署名とGatekeeper検証も確認しています。ビルド手順は[署名・公証のドキュメント](docs/NOTARIZATION.md)にまとめています。
 
 ### ソースからビルド
 
@@ -92,10 +92,16 @@ open dist/PortLens.app
 swift run PortLens
 ```
 
-配布用のUniversal版ZIPとSHA-256チェックサムを作る場合は、次を実行します。出力先は`dist/releases/`です。
+アドホック署名のUniversal版ZIPとSHA-256チェックサムを作る場合は、次を実行します。出力先は`dist/releases/`です。
 
 ```sh
 ./scripts/package-release.sh
+```
+
+Developer ID署名とApple公証を行う配布版は、[必要な署名・認証設定](docs/NOTARIZATION.md)を用意して次を実行します。出力先は`dist/notarization/run-*/`です。AppleのAccepted、チケット添付、最終ZIPを展開した後の署名・Gatekeeper検証まで実行します。
+
+```sh
+./scripts/notarize-release.sh
 ```
 
 ### 検証
@@ -173,6 +179,7 @@ Resources/
 scripts/
   build-app.sh          .appの生成
   package-release.sh    Universal版ZIPとチェックサムの生成
+  notarize-release.sh   Developer ID署名・Apple公証・配布ZIPの検証
   generate-icon.swift   SVGからアイコン・画面用ロゴを生成
 docs/
   images/               スクリーンショット
@@ -181,6 +188,8 @@ docs/
 
 ## ドキュメント
 
+- [Developer ID署名とApple公証](docs/NOTARIZATION.md)
+- [0.1.0 公証済み版のリリースノート](docs/releases/v0.1.0-notarized.md)
 - [v0.1.0 リリースノート](docs/releases/v0.1.0.md)
 - [安全性とプライバシー](docs/安全性とプライバシー.md)
 - [表示の制限](docs/表示の制限.md)

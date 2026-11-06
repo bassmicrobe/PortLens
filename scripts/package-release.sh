@@ -10,7 +10,9 @@ checksum_name="PortLens-$release_version-SHA256SUMS.txt"
 "$package_root/scripts/build-app.sh" --universal
 bundle="$package_root/dist/PortLens.app"
 codesign --verify --strict "$bundle"
-xcrun lipo "$bundle/Contents/MacOS/PortLens" -verify_arch arm64 x86_64
+for architecture in arm64 x86_64; do
+    xcrun lipo "$bundle/Contents/MacOS/PortLens" -verify_arch "$architecture"
+done
 
 mkdir -p "$release_directory"
 temporary_archive="$release_directory/.$archive_name.$$"
